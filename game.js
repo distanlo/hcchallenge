@@ -11,10 +11,10 @@ const resetButton = document.getElementById("reset");
 const leftButton = document.getElementById("left");
 const rightButton = document.getElementById("right");
 
-const GAME_WIDTH = 480;
-const GAME_HEIGHT = 270;
+const GAME_WIDTH = 640;
+const GAME_HEIGHT = 360;
 const CUSTOMERS_TOTAL = 3;
-const PATIENCE_MAX = 16;
+const PATIENCE_MAX = 18;
 const HAIRCUT_MAX = 14;
 
 let patience = [];
@@ -22,7 +22,6 @@ let haircut = [];
 let score = 0;
 let gameState = "idle";
 let lastTick = 0;
-let loopId = null;
 let hairdresserLane = 1;
 let hairdresserX = 0;
 let hairdresserTargetX = 0;
@@ -30,7 +29,7 @@ let hairdresserTargetX = 0;
 const palette = {
   skin: "#f2c9b1",
   skin2: "#e0a880",
-  hair: "#3a135a",
+  hair: "#2a0f4a",
   hairHighlight: "#b44bff",
   jacket: "#ff4fd8",
   jacket2: "#ff8cf1",
@@ -46,96 +45,117 @@ const palette = {
   cup: "#7adf7f",
   boba: "#1a1a1a",
   straw: "#ff4fd8",
+  mirror: "#2f2a4f",
+  mirrorGlow: "#6ef5ff",
   overlay: "rgba(11, 11, 22, 0.7)",
 };
 
 const hairdresserSprite = [
-  "....3333333333....",
-  "...333444444433...",
-  "..33444444444433..",
-  "..33444444444433..",
-  "..33444444444433..",
-  "..33555555555533..",
-  "..33511111111133..",
-  "..33511222111133..",
-  "..33511111111133..",
-  "..33511333111133..",
-  "..33511111111133..",
-  "..33566666666633..",
-  "..33566666666633..",
-  "..33566777766633..",
-  "..33567777776633..",
-  "..33577777777733..",
-  "..33377777777733..",
-  "...333333333333...",
+  "....333333333333....",
+  "...33344444444433...",
+  "..3344444444444433..",
+  "..3344444444444433..",
+  "..3344444444444433..",
+  "..3344444444444433..",
+  "..3344444444444433..",
+  "..3355555555555533..",
+  "..3351111111111133..",
+  "..3351122222221133..",
+  "..3351120000221133..",
+  "..3351122333221133..",
+  "..3351123333221133..",
+  "..3351122222221133..",
+  "..3351111111111133..",
+  "..3356666666666633..",
+  "..3356666666666633..",
+  "..3356666666666633..",
+  "..3356677777776633..",
+  "..3356777777777663..",
+  "..3357777777777763..",
+  "..3357777777777763..",
+  "..3337777777777733..",
+  "...33333333333333...",
 ];
 
 const hairdresserMatchaSprite = [
-  "....3333333333....",
-  "...333444444433...",
-  "..33444444444433..",
-  "..33444444444433..",
-  "..33444444444433..",
-  "..33555555555533..",
-  "..33511111111133..",
-  "..33511222111133..",
-  "..33511111111133..",
-  "..33511333111133..",
-  "..33511111111133..",
-  "..33566666666633..",
-  "..33566666666633..",
-  "..33566777766633..",
-  "..33567777776633..",
-  "..33577777777733..",
-  "..33377777777733..",
-  "...333333333333...",
+  "....333333333333....",
+  "...33344444444433...",
+  "..3344444444444433..",
+  "..3344444444444433..",
+  "..3344444444444433..",
+  "..3344444444444433..",
+  "..3344444444444433..",
+  "..3355555555555533..",
+  "..3351111111111133..",
+  "..3351122222221133..",
+  "..3351120000221133..",
+  "..3351122333221133..",
+  "..3351123333221133..",
+  "..3351122222221133..",
+  "..3351111111111133..",
+  "..3356666666666633..",
+  "..3356666666666633..",
+  "..3356666666666633..",
+  "..3356677777776633..",
+  "..3356777777777663..",
+  "..3357777777777763..",
+  "..3357777777777763..",
+  "..3337777777777733..",
+  "...33333333333333...",
 ];
 
 const customerSprite = [
-  "....8888888888....",
-  "...888888888888...",
-  "..88889999888888..",
-  "..88899999998888..",
-  "..88999999999888..",
-  "..88999999999888..",
-  "..88999999999888..",
-  "..88999999999888..",
-  "..88991111199888..",
-  "..88911111119888..",
-  "..88911111119888..",
-  "..88911111119888..",
-  "..88911333119888..",
-  "..88911333119888..",
-  "..88911111119888..",
-  "...891111111988...",
-  "...811111111188...",
-  "....8888888888....",
+  "....888888888888....",
+  "...88888888888888...",
+  "..8888999999998888..",
+  "..8889999999999888..",
+  "..8899999999999988..",
+  "..8899999999999988..",
+  "..8899999999999988..",
+  "..8899999999999988..",
+  "..8899111111119988..",
+  "..8891122222211988..",
+  "..8891120000211988..",
+  "..8891122333211988..",
+  "..8891123333211988..",
+  "..8891122222211988..",
+  "..8891111111119988..",
+  "..8896666666669988..",
+  "..8896666666669988..",
+  "..8896666666669988..",
+  "..8896677777769988..",
+  "..8896777777779988..",
+  "..8897777777779988..",
+  "..8897777777779988..",
+  "..8887777777778888..",
+  "...88888888888888...",
 ];
 
 const matchaSprite = [
-  "........",
-  "..cccc..",
-  ".cccccc.",
-  ".cccccc.",
-  ".cbbbbc.",
-  ".cbbbbc.",
-  ".cccccc.",
-  "..ccs...",
+  "..........",
+  "..cccccc..",
+  ".cccccccc.",
+  ".cccccccc.",
+  ".ccbbbbcc.",
+  ".ccbbbbcc.",
+  ".cccccccc.",
+  "..cccs....",
 ];
 
 const huzzSprite = [
-  "hhhhhhhhhh",
-  "hzzzzzzzzh",
-  "hzzzzzzzzh",
-  "hzzzzzzzzh",
-  "hzzzzzzzzh",
-  "hzzzzzzzzh",
-  "hzzzzzzzzh",
-  "hhhhhhhhhh",
+  "hhhhhhhhhhhh",
+  "hzzzzzzzzzzh",
+  "hzzzzzzzzzzh",
+  "hzzzzzzzzzzh",
+  "hzzzzzzzzzzh",
+  "hzzzzzzzzzzh",
+  "hzzzzzzzzzzh",
+  "hhhhhhhhhhhh",
 ];
 
 const spriteColors = {
   ".": null,
+  "0": "#2b1a3f",
   "1": palette.skin,
   "2": palette.skin2,
   "3": palette.hair,
@@ -152,8 +172,8 @@ const spriteColors = {
   "z": palette.text,
 };
 
-const pixelSize = 3;
-const lanes = [100, 240, 380];
+const pixelSize = 2;
+const lanes = [150, 320, 490];
 
 const salonProps = {
   neon: "O'S HAIR",
@@ -165,7 +185,7 @@ const resizeCanvas = () => {
   const ratio = GAME_WIDTH / GAME_HEIGHT;
   let width = innerWidth * 0.95;
   let height = width / ratio;
-  const heightLimit = innerWidth > innerHeight ? innerHeight * 0.7 : innerHeight * 0.5;
+  const heightLimit = innerWidth > innerHeight ? innerHeight * 0.75 : innerHeight * 0.55;
   if (height > heightLimit) {
     height = heightLimit;
     width = height * ratio;
@@ -190,7 +210,7 @@ const startGame = () => {
   if (gameState === "playing") return;
   gameState = "playing";
   lastTick = performance.now();
-  loopId = requestAnimationFrame(gameLoop);
+  requestAnimationFrame(gameLoop);
   updateHud();
 };
 
@@ -210,10 +230,10 @@ const cutHair = () => {
   if (gameState !== "playing") return;
   const idx = hairdresserLane;
   if (haircut[idx] <= 0) return;
-  haircut[idx] = Math.max(0, haircut[idx] - 1.4);
-  score += 10;
+  haircut[idx] = Math.max(0, haircut[idx] - 1.2);
+  score += 12;
   if (allStyled()) {
-    score += Math.floor(patience.reduce((sum, value) => sum + value, 0) * 6);
+    score += Math.floor(patience.reduce((sum, value) => sum + value, 0) * 5);
     winRound();
   }
   updateHud();
@@ -252,41 +272,52 @@ const drawSprite = (sprite, x, y, scale = 1) => {
 
 const drawSalon = () => {
   ctx.fillStyle = palette.floor;
-  ctx.fillRect(0, 210, GAME_WIDTH, 60);
+  ctx.fillRect(0, 280, GAME_WIDTH, 80);
 
-  ctx.fillStyle = "#2d1b44";
-  ctx.fillRect(0, 0, GAME_WIDTH, 210);
+  ctx.fillStyle = "#241339";
+  ctx.fillRect(0, 0, GAME_WIDTH, 280);
+
+  ctx.fillStyle = palette.mirror;
+  ctx.fillRect(40, 60, 170, 80);
+  ctx.strokeStyle = palette.mirrorGlow;
+  ctx.lineWidth = 2;
+  ctx.strokeRect(40, 60, 170, 80);
+  ctx.fillRect(235, 60, 170, 80);
+  ctx.strokeRect(235, 60, 170, 80);
+  ctx.fillRect(430, 60, 170, 80);
+  ctx.strokeRect(430, 60, 170, 80);
 
   ctx.strokeStyle = palette.neon;
-  ctx.strokeRect(20, 18, 140, 40);
+  ctx.lineWidth = 3;
+  ctx.strokeRect(30, 20, 180, 36);
   ctx.fillStyle = palette.neon;
   ctx.font = "14px 'Press Start 2P', monospace";
-  ctx.fillText(salonProps.neon, 30, 45);
+  ctx.fillText(salonProps.neon, 42, 45);
 
   ctx.strokeStyle = "#ff4fd8";
-  ctx.strokeRect(320, 18, 130, 44);
+  ctx.strokeRect(440, 18, 170, 44);
   ctx.fillStyle = "#ff9f43";
   ctx.font = "10px 'Press Start 2P', monospace";
-  ctx.fillText(salonProps.posters[0], 335, 38);
-  ctx.fillText(salonProps.posters[1], 335, 54);
+  ctx.fillText(salonProps.posters[0], 455, 38);
+  ctx.fillText(salonProps.posters[1], 455, 54);
 
   lanes.forEach((x) => {
     ctx.fillStyle = palette.chair;
-    ctx.fillRect(x - 20, 150, 40, 35);
+    ctx.fillRect(x - 28, 230, 56, 44);
     ctx.fillStyle = palette.chair2;
-    ctx.fillRect(x - 16, 140, 32, 12);
+    ctx.fillRect(x - 22, 214, 44, 16);
   });
 };
 
 const drawMeter = (label, value, max, x, y, color) => {
   ctx.fillStyle = "#120a24";
-  ctx.fillRect(x, y, 80, 8);
+  ctx.fillRect(x, y, 110, 10);
   ctx.fillStyle = color;
-  ctx.fillRect(x, y, (value / max) * 80, 8);
+  ctx.fillRect(x, y, (value / max) * 110, 10);
   ctx.strokeStyle = "#2f1a4e";
-  ctx.strokeRect(x, y, 80, 8);
+  ctx.strokeRect(x, y, 110, 10);
   ctx.fillStyle = palette.text;
-  ctx.font = "8px 'Press Start 2P', monospace";
+  ctx.font = "9px 'Press Start 2P', monospace";
   ctx.fillText(label, x, y - 4);
 };
 
@@ -295,22 +326,22 @@ const drawStatusOverlay = () => {
   ctx.fillStyle = palette.overlay;
   ctx.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
   ctx.fillStyle = palette.text;
-  ctx.font = "16px 'Press Start 2P', monospace";
+  ctx.font = "18px 'Press Start 2P', monospace";
   ctx.textAlign = "center";
 
   if (gameState === "lose") {
-    ctx.fillText("HUZZ!", GAME_WIDTH / 2, 120);
-    drawSprite(huzzSprite, GAME_WIDTH / 2 - 40, 135, 2);
+    ctx.fillText("HUZZ!", GAME_WIDTH / 2, 150);
+    drawSprite(huzzSprite, GAME_WIDTH / 2 - 60, 165, 2);
     ctx.font = "10px 'Press Start 2P', monospace";
-    ctx.fillText("Customers stormed out!", GAME_WIDTH / 2, 190);
+    ctx.fillText("Customers stormed out!", GAME_WIDTH / 2, 230);
   }
 
   if (gameState === "win") {
-    ctx.fillText("YOU WIN!", GAME_WIDTH / 2, 90);
+    ctx.fillText("YOU WIN!", GAME_WIDTH / 2, 120);
     ctx.font = "10px 'Press Start 2P', monospace";
-    ctx.fillText("Matcha break time", GAME_WIDTH / 2, 120);
-    drawSprite(hairdresserMatchaSprite, GAME_WIDTH / 2 - 120, 130, 2);
-    drawSprite(matchaSprite, GAME_WIDTH / 2 + 40, 150, 3);
+    ctx.fillText("Matcha break time", GAME_WIDTH / 2, 150);
+    drawSprite(hairdresserMatchaSprite, GAME_WIDTH / 2 - 140, 170, 2);
+    drawSprite(matchaSprite, GAME_WIDTH / 2 + 60, 210, 3);
   }
 
   ctx.textAlign = "left";
@@ -321,19 +352,19 @@ const drawScene = () => {
   drawSalon();
 
   lanes.forEach((x, index) => {
-    const baseY = 118;
-    drawSprite(customerSprite, x - 24, baseY, 2);
-    drawMeter("PATIENCE", patience[index], PATIENCE_MAX, x - 40, 96, palette.warn);
-    drawMeter("HAIRCUT", haircut[index], HAIRCUT_MAX, x - 40, 108, palette.good);
+    const baseY = 140;
+    drawSprite(customerSprite, x - 26, baseY, 2);
+    drawMeter("PATIENCE", patience[index], PATIENCE_MAX, x - 55, 115, palette.warn);
+    drawMeter("HAIRCUT", haircut[index], HAIRCUT_MAX, x - 55, 129, palette.good);
   });
 
-  drawSprite(hairdresserSprite, hairdresserX - 30, 120, 2);
+  drawSprite(hairdresserSprite, hairdresserX - 30, 150, 2);
 
   drawStatusOverlay();
 };
 
 const updateHairdresser = (delta) => {
-  const speed = 240;
+  const speed = 280;
   if (Math.abs(hairdresserTargetX - hairdresserX) < 1) {
     hairdresserX = hairdresserTargetX;
     return;
@@ -360,7 +391,7 @@ const gameLoop = (timestamp) => {
     const isStyled = haircut[index] <= 0;
     if (isStyled) return value;
     const active = index === hairdresserLane;
-    const drain = active ? 0.45 : 0.9;
+    const drain = active ? 0.4 : 0.95;
     return Math.max(0, value - delta * drain);
   });
 
@@ -379,7 +410,7 @@ const gameLoop = (timestamp) => {
 
   updateHud();
   drawScene();
-  loopId = requestAnimationFrame(gameLoop);
+  requestAnimationFrame(gameLoop);
 };
 
 startButton.addEventListener("click", startGame);

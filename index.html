@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>O's Haircut Challenge</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="crt"></div>
+    <main class="game-shell">
+      <header class="title-bar">
+        <h1>O's Haircut Challenge</h1>
+        <p>Cut 3 customers before their patience runs out!</p>
+      </header>
+      <section class="hud">
+        <div class="stat">
+          <span>Customer</span>
+          <strong id="customer-count">1 / 3</strong>
+        </div>
+        <div class="stat">
+          <span>Patience</span>
+          <strong id="patience">---</strong>
+        </div>
+        <div class="stat">
+          <span>Haircut</span>
+          <strong id="haircut">---</strong>
+        </div>
+        <div class="stat">
+          <span>Score</span>
+          <strong id="score">0</strong>
+        </div>
+      </section>
+      <canvas id="game" width="480" height="270" aria-label="Game canvas"></canvas>
+      <section class="controls">
+        <button id="start">Start</button>
+        <button id="cut">Cut Hair</button>
+        <button id="reset">Reset</button>
+      </section>
+      <footer class="tips">
+        <p>Best played in landscape. Tap or click “Cut Hair” repeatedly to style faster.</p>
+      </footer>
+    </main>
+    <script src="game.js"></script>
+  </body>
+</html>

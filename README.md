@@ -2,6 +2,8 @@
 
 A neon 80s-inspired pixel salon game where O races to style three customers before their patience runs out.
 
+For the best iPhone experience, rotate to landscape and tap the Cut Hair button (or anywhere on the game screen).
+
 ## GitHub Pages
 
 1. Push this repository to GitHub.

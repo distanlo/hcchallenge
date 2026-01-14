@@ -46,21 +46,40 @@ const palette = {
 
 const hairdresserSprite = [
   "................",
-  "....3333333.....",
-  "...334444433....",
+  "...333333333....",
   "..33444444433...",
-  "..33445554433...",
-  "..33445554433...",
   "..33444444433...",
-  "...335555533....",
-  "....1555551.....",
-  "....1155511.....",
-  "....1166611.....",
-  "....1177711.....",
-  "....1177711.....",
-  "....1777711.....",
-  "....7777771.....",
-  "....7777771.....",
+  "..33555555533...",
+  "..33511111533...",
+  "..33511111533...",
+  "..33511111533...",
+  "..33511111533...",
+  "..33511111533...",
+  "..33566666533...",
+  "..33566666533...",
+  "..33567776533...",
+  "..33577777533...",
+  "..33377777733...",
+  "...333333333....",
+];
+
+const hairdresserMatchaSprite = [
+  "................",
+  "...333333333....",
+  "..33444444433...",
+  "..33444444433...",
+  "..33555555533...",
+  "..33511111533...",
+  "..33511111533...",
+  "..33511111533...",
+  "..33511111533...",
+  "..33511111533...",
+  "..33566666533...",
+  "..33566666533...",
+  "..33567776533...",
+  "..33577777533...",
+  "..33377777733...",
+  "...333333333....",
 ];
 
 const customerSprite = [
@@ -134,8 +153,9 @@ const resizeCanvas = () => {
   const ratio = GAME_WIDTH / GAME_HEIGHT;
   let width = innerWidth * 0.95;
   let height = width / ratio;
-  if (height > innerHeight * 0.55) {
-    height = innerHeight * 0.55;
+  const heightLimit = innerWidth > innerHeight ? innerHeight * 0.7 : innerHeight * 0.5;
+  if (height > heightLimit) {
+    height = heightLimit;
     width = height * ratio;
   }
   canvas.style.width = `${width}px`;
@@ -271,7 +291,8 @@ const drawStatusOverlay = () => {
   if (gameState === "win") {
     ctx.fillText("YOU WIN!", GAME_WIDTH / 2, 90);
     ctx.fillText("Matcha break time", GAME_WIDTH / 2, 120);
-    drawSprite(matchaSprite, GAME_WIDTH / 2 - 32, 140, 3);
+    drawSprite(hairdresserMatchaSprite, GAME_WIDTH / 2 - 120, 130, 2);
+    drawSprite(matchaSprite, GAME_WIDTH / 2 - 8, 150, 3);
   }
 
   ctx.textAlign = "left";
